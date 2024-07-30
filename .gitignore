@@ -1,0 +1,58 @@
+import tkinter as tk
+from tkinter import ttk
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+def plot_graphs():
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(5, 10))
+
+    # Dummy data for Heart Rate and Blood Pressure
+    x = list(range(1, 11))
+    heart_rate = [60, 70, 75, 65, 80, 90, 85, 70, 75, 80]
+    blood_pressure = [120, 125, 115, 110, 130, 140, 135, 125, 130, 135]
+
+    # Heart Rate graph
+    ax1.plot(x, heart_rate, marker='o')
+    ax1.set_title('Heart Rate')
+    ax1.set_xlabel('Time')
+    ax1.set_ylabel('BPM')
+    ax1.grid(True)
+
+    # Blood Pressure graph
+    ax2.plot(x, blood_pressure, marker='o')
+    ax2.set_title('Blood Pressure')
+    ax2.set_xlabel('Time')
+    ax2.set_ylabel('mmHg')
+    ax2.grid(True)
+
+    return fig
+
+class DashboardApp:
+    def _init_(self, root):
+        self.root = root
+        self.root.title("Health Dashboard")
+
+        # Create tabs
+        self.tab_control = ttk.Notebook(root)
+        self.tab_day = ttk.Frame(self.tab_control)
+        self.tab_month = ttk.Frame(self.tab_control)
+        self.tab_year = ttk.Frame(self.tab_control)
+
+        self.tab_control.add(self.tab_day, text='DAY')
+        self.tab_control.add(self.tab_month, text='MONTH')
+        self.tab_control.add(self.tab_year, text='YEAR')
+
+        self.tab_control.pack(expand=1, fill='both')
+
+        self.create_dashboard(self.tab_month)
+
+    def create_dashboard(self, tab):
+        fig = plot_graphs()
+        canvas = FigureCanvasTkAgg(fig, master=tab)
+        canvas.draw()
+        canvas.get_tk_widget().pack()
+
+if _name_ == "_main_":
+    root = tk.Tk()
+    app = DashboardApp(root)
+    root.mainloop()
